@@ -1,0 +1,6 @@
+class Triangle {
+public:
+
+private:
+	
+};
