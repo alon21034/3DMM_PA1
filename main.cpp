@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Vertex.h"
+#include "ColorImage.h"
 
 using namespace std;
 
@@ -72,12 +73,20 @@ int main(int argc, char** argv) {
 	}
 	printf("finished reading input file");
 
-	// initial color image.
-
-	// for output ppm image file
-	FILE* outFile = fopen(outputFilePath, "w");
-
-
-	fprintf("P3");
-
+	/** usage of ColorImage
+	ColorImage image;
+    int x, y;
+    Pixel p={0,0,0};
+ 
+    image.init(256, 256);
+    for (y=0; y<256; y++) {
+        for (x=0; x<256; x++) {
+            p.R = x;
+            p.G = y;
+            //p.B = y;
+            image.writePixel(x, y, p);
+        }
+    }
+    image.outputPPM("rainbow.ppm");
+    **/
 }

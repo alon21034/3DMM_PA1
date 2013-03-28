@@ -1,5 +1,5 @@
 all: main.o Vertex.o Triangle.o ColorImage.o
-	g++ -o pa1 main.o Vertex.o
+	g++ -o pa1 main.o Vertex.o Triangle.o ColorImage.o
 
 main.o: main.cpp 
 	g++ -c main.cpp
