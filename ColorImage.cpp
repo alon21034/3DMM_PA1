@@ -13,7 +13,7 @@ ColorImage::~ColorImage(){
 }
 
 void ColorImage::init(int xSize, int ySize){
-    Pixel p = {0,0,0};
+    Pixel p;
     xRes = xSize;
     yRes = ySize;
     pPixel = new Pixel[xSize*ySize];

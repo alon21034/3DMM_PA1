@@ -4,12 +4,13 @@
 
 #include "Vertex.h"
 #include "ColorImage.h"
+#include "Triangle.h"
 
 using namespace std;
 
 #define VERTEX_IDENTIFIER "Vertices"
 #define COLOR_IDENTIFIER "Colors"
-#define TRIANGLE_IDENTIFIER "Triangle_List"
+#define TRIANGLE_IDENTIFIER "Triangle_list"
 
 #define VERTEX_MODE 1
 #define COLOR_MODE 2
@@ -29,10 +30,12 @@ int main(int argc, char** argv) {
 	}
 	FILE* inputFile = fopen(inputFilePath, "r");
 
-	char str[10];
+	char str[20];
 	int mode = VERTEX_MODE;
 	Vertex* vertices = NULL;
+	Triangle** triangleList = NULL;
 	int vertexNum;
+	int triangleNum;
 
 	// read identifier
 	while(fscanf(inputFile, "%s", str)) {
@@ -40,12 +43,11 @@ int main(int argc, char** argv) {
 			// read vertices
 
 			fscanf(inputFile, "%d", &vertexNum);
-			printf("start reading vertices(%d): \n", vertexNum);
+			printf("start reading vertices(%d)\n", vertexNum);
 			// allocate memory to save vertices
 			vertices = new Vertex[vertexNum];
 
 			for (int i = 0; i < vertexNum; ++i) {
-				cout << i <<endl;
 				float x, y, z;
 				fscanf(inputFile, "%f %f %f", &x, &y, &z);
 				vertices[i].setCoordinate(x, y, z);
@@ -61,10 +63,25 @@ int main(int argc, char** argv) {
 			for (int i = 0; i < vertexNum; ++i) {
 				float r, g, b;
 				fscanf(inputFile, "%f %f %f", &r, &g, &b);
-				vertices[i].setColor(r, g, b);
+				vertices[i].setPixel(new Pixel(r,g,b));
 			}
 		} else if (strcmp(str, TRIANGLE_IDENTIFIER) == 0) {
 			// read triangles
+			if (vertices == NULL) {
+				printf("should read vertices first.\n");
+				break;
+			}
+			fscanf(inputFile, "%d", &triangleNum);
+			printf("strat reading triangles(%d)\n", triangleNum);
+
+			
+			triangleList = new Triangle*[triangleNum];
+
+			for (int i = 0 ; i < triangleNum ; ++i) {
+				int a, b, c;
+				fscanf(inputFile, "%d %d %d", &a, &b, &c);
+				triangleList[i] = new Triangle(&vertices[a], &vertices[b], &vertices[c]);
+			}
 			break;
 		} else {
 			printf("error: stop reading file\n");
