@@ -14,14 +14,19 @@ using namespace std;
 #define COLOR_MODE 2
 
 int main(int argc, char** argv) {
-	char* filepath;
-	if (argc == 1) {
-		filepath = new char[20];
-		filepath = "Models/cube.txt";
+	char* inputFilePath;
+	char* outputFilePath;
+	if (argc < 3) {
+		inputFilePath = new char[20];
+		inputFilePath = "Models/cube.txt";
+
+		outputFilePath = new char[20];
+		outputFilePath = "result_image,ppm";
 	} else {
-		filepath = argv[1];
+		inputFilePath = argv[1];
+		outputFilePath = argv[2];
 	}
-	FILE* inputFile = fopen(filepath, "r");
+	FILE* inputFile = fopen(inputFilePath, "r");
 
 	char str[10];
 	int mode = VERTEX_MODE;
@@ -61,8 +66,18 @@ int main(int argc, char** argv) {
 			// read triangles
 			break;
 		} else {
-			printf("stop reading file\n");
+			printf("error: stop reading file\n");
 			break;
 		}
 	}
+	printf("finished reading input file");
+
+	// initial color image.
+
+	// for output ppm image file
+	FILE* outFile = fopen(outputFilePath, "w");
+
+
+	fprintf("P3");
+
 }

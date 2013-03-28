@@ -1,0 +1,6 @@
+class ColorImage {
+public:
+
+private:
+
+};
