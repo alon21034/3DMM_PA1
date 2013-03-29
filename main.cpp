@@ -5,6 +5,7 @@
 #include "Vertex.h"
 #include "ColorImage.h"
 #include "Triangle.h"
+#include "Space.h"
 
 using namespace std;
 
@@ -32,7 +33,7 @@ int main(int argc, char** argv) {
 
 	char str[20];
 	int mode = VERTEX_MODE;
-	Vertex* vertices = NULL;
+	Vertex** vertexList = NULL;
 	Triangle** triangleList = NULL;
 	int vertexNum;
 	int triangleNum;
@@ -40,22 +41,22 @@ int main(int argc, char** argv) {
 	// read identifier
 	while(fscanf(inputFile, "%s", str)) {
 		if (strcmp(str, VERTEX_IDENTIFIER) == 0) {
-			// read vertices
+			// read vertex
 
 			fscanf(inputFile, "%d", &vertexNum);
-			printf("start reading vertices(%d)\n", vertexNum);
-			// allocate memory to save vertices
-			vertices = new Vertex[vertexNum];
+			printf("start reading vertex(%d)\n", vertexNum);
+			// allocate memory to save vertexList
+			vertexList = new Vertex*[vertexNum];
 
 			for (int i = 0; i < vertexNum; ++i) {
 				float x, y, z;
 				fscanf(inputFile, "%f %f %f", &x, &y, &z);
-				vertices[i].setCoordinate(x, y, z);
+				vertexList[i] = new Vertex(x,y,z);
 			}
 		} else if (strcmp(str, COLOR_IDENTIFIER) == 0) {
 			// read color
-			if (vertices == NULL) {
-				printf("should read vertices first.\n");
+			if (vertexList == NULL) {
+				printf("should read vertex first.\n");
 				break;
 			}
 			printf("start reading colors\n");
@@ -63,12 +64,12 @@ int main(int argc, char** argv) {
 			for (int i = 0; i < vertexNum; ++i) {
 				float r, g, b;
 				fscanf(inputFile, "%f %f %f", &r, &g, &b);
-				vertices[i].setPixel(new Pixel(r,g,b));
+				vertexList[i]->setPixel(new Pixel(r,g,b));
 			}
 		} else if (strcmp(str, TRIANGLE_IDENTIFIER) == 0) {
 			// read triangles
-			if (vertices == NULL) {
-				printf("should read vertices first.\n");
+			if (vertexList == NULL) {
+				printf("should read vertex first.\n");
 				break;
 			}
 			fscanf(inputFile, "%d", &triangleNum);
@@ -80,7 +81,7 @@ int main(int argc, char** argv) {
 			for (int i = 0 ; i < triangleNum ; ++i) {
 				int a, b, c;
 				fscanf(inputFile, "%d %d %d", &a, &b, &c);
-				triangleList[i] = new Triangle(&vertices[a], &vertices[b], &vertices[c]);
+				triangleList[i] = new Triangle(vertexList[a], vertexList[b], vertexList[c]);
 			}
 			break;
 		} else {
@@ -88,7 +89,13 @@ int main(int argc, char** argv) {
 			break;
 		}
 	}
-	printf("finished reading input file");
+	printf("finished reading input file\n");
+
+	Space* space = new Space(triangleList, triangleNum);
+	Vec3 v(0.0,1.0,0.0);
+	ColorImage image = space->getImage(v, 300, 300);
+	image.outputPPM("result.ppm");
+
 
 	/** usage of ColorImage
 	ColorImage image;

@@ -1,3 +1,6 @@
+#ifndef __TRIANGLE__H
+#define __TRIANGLE__H
+
 #include "Vertex.h"
 
 class Triangle {
@@ -8,3 +11,5 @@ private:
 	Vertex* _v2;
 	Vertex* _v3;
 };
+
+#endif

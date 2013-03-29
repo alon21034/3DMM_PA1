@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-Vertex::Vertex() {
+Vertex::Vertex(float x, float y, float z): _x(x), _y(y), _z(z) {
 
 }
 
@@ -12,12 +12,6 @@ Vertex::~Vertex() {
 
 void Vertex::setPixel(Pixel* p) {
 	_p = *p;
-}
-
-void Vertex::setCoordinate(float x, float y, float z) {
-	_x = x;
-	_y = y;
-	_z = z;
 }
 
 void Vertex::print() {

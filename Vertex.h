@@ -5,7 +5,7 @@
 
 class Vertex {
 public:
-	Vertex();
+	Vertex(float, float, float);
 	~Vertex();
 
 	void setCoordinate(float, float, float);
