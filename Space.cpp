@@ -92,7 +92,7 @@ void Space::rasterization(ColorImage& image) {
 
 void Space::drawTriangle(ColorImage& image, Triangle* triangle) {
 	triangle->drawVertex(image);
-	//triangle->drawEdge();
+	triangle->drawEdge(image);
 	//triangle->fillColor();
 }
 

@@ -35,6 +35,9 @@ public:
 	}
 
 private:
+
+	void drawLine(ColorImage&, Vertex*, Vertex*);
+
 	Vertex* _v1;
 	Vertex* _v2;
 	Vertex* _v3;
