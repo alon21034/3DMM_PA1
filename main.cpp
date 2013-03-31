@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
 			for (int i = 0; i < vertexNum; ++i) {
 				float r, g, b;
 				fscanf(inputFile, "%f %f %f", &r, &g, &b);
-				cout << i << "  " << r << " " << g << " " << b << endl;
+				//cout << i << "  " << r << " " << g << " " << b << endl;
 				vertexList[i]->setColor(r*255,g*255,b*255);
 			}
 		} else if (strcmp(str, TRIANGLE_IDENTIFIER) == 0) {
@@ -99,7 +99,7 @@ int main(int argc, char** argv) {
 	printf("finished reading input file\n");
 
 	Space* space = new Space(triangleList, triangleNum);
-	ColorImage image = space->getImage(200, 200);
+	ColorImage image = space->getImage(500, 500);
 	image.outputPPM("result.ppm");
     /**/
 }

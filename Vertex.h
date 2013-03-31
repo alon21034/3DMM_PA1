@@ -19,7 +19,7 @@ public:
 	float getY() { return y; }
 	float getZ() { return z; }
 	
-	Color getColor(){ return *_p; }
+	Color getColor(){ return _p; }
 private:
 	float _x;
 	float _y;
@@ -29,7 +29,7 @@ private:
 	float y;
 	float z;
 
-	Color* _p;
+	Color _p;
 };
 
 #endif
