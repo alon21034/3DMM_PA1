@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 	}
 	FILE* inputFile = fopen(inputFilePath, "r");
 
-	char str[20];
+	char str[100];
 	int mode = VERTEX_MODE;
 	Vertex** vertexList = NULL;
 	Triangle** triangleList = NULL;
@@ -40,6 +40,7 @@ int main(int argc, char** argv) {
 
 	// read identifier
 	while(fscanf(inputFile, "%s", str)) {
+		cout << str << endl;
 		if (strcmp(str, VERTEX_IDENTIFIER) == 0) {
 			// read vertex
 
@@ -50,7 +51,7 @@ int main(int argc, char** argv) {
 
 			for (int i = 0; i < vertexNum; ++i) {
 				float x, y, z;
-				fscanf(inputFile, "%f %f %f", &x, &y, &z);
+				fscanf(inputFile, "%f %f %f", &z, &y, &x);
 				vertexList[i] = new Vertex(x,y,z);
 			}
 		} else if (strcmp(str, COLOR_IDENTIFIER) == 0) {
@@ -60,11 +61,17 @@ int main(int argc, char** argv) {
 				break;
 			}
 			printf("start reading colors\n");
-
+			int colorNum;
+			fscanf(inputFile, "%d", &colorNum);
+			if (colorNum != vertexNum) {
+				cout << "error" << endl;
+				break;
+			}
 			for (int i = 0; i < vertexNum; ++i) {
 				float r, g, b;
 				fscanf(inputFile, "%f %f %f", &r, &g, &b);
-				vertexList[i]->setPixel(new Pixel(r,g,b));
+				cout << i << "  " << r << " " << g << " " << b << endl;
+				vertexList[i]->setColor(r*255,g*255,b*255);
 			}
 		} else if (strcmp(str, TRIANGLE_IDENTIFIER) == 0) {
 			// read triangles
@@ -86,31 +93,13 @@ int main(int argc, char** argv) {
 			break;
 		} else {
 			printf("error: stop reading file\n");
-			break;
+			return 0;
 		}
 	}
 	printf("finished reading input file\n");
 
 	Space* space = new Space(triangleList, triangleNum);
-	Vec3 v(0.0,1.0,0.0);
-	ColorImage image = space->getImage(v, 300, 300);
+	ColorImage image = space->getImage(200, 200);
 	image.outputPPM("result.ppm");
-
-
-	/** usage of ColorImage
-	ColorImage image;
-    int x, y;
-    Pixel p={0,0,0};
- 
-    image.init(256, 256);
-    for (y=0; y<256; y++) {
-        for (x=0; x<256; x++) {
-            p.R = x;
-            p.G = y;
-            //p.B = y;
-            image.writePixel(x, y, p);
-        }
-    }
-    image.outputPPM("rainbow.ppm");
-    **/
+    /**/
 }

@@ -1,5 +1,5 @@
-all: main.o Vertex.o Triangle.o ColorImage.o Space.o
-	g++ -o pa1 main.o Vertex.o Triangle.o ColorImage.o Space.o
+all: main.o Vertex.o Triangle.o ColorImage.o Space.o Utils.o
+	g++ -o pa1 main.o Vertex.o Triangle.o ColorImage.o Space.o Utils.o
 
 main.o: main.cpp 
 	g++ -c main.cpp
@@ -15,6 +15,9 @@ ColorImage.o: ColorImage.cpp ColorImage.h
 
 Space.o: Space.cpp Space.h
 	g++ -c Space.cpp
+
+Utils.o: Utils.cpp Utils.h
+	g++ -c Utils.cpp
 
 clean:
 	rm *.o pa1

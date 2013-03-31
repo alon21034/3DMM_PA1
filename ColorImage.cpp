@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "ColorImage.h"
+#include <iostream>
+
+using namespace std;
 
 ColorImage::ColorImage(){
     pPixel = 0;
@@ -13,32 +16,32 @@ ColorImage::~ColorImage(){
 }
 
 void ColorImage::init(int xSize, int ySize){
-    Pixel p;
+    Color p;
     xRes = xSize;
     yRes = ySize;
-    pPixel = new Pixel[xSize*ySize];
+    pPixel = new Color[xSize*ySize];
     clear(p);
 }
 
-void ColorImage::clear(Pixel background){
+void ColorImage::clear(Color background){
     int i;
 
     if (! pPixel) return;
     for (i=0; i<xRes*yRes; i++) pPixel[i] = background;
 }
 
-Pixel ColorImage::readPixel(int x, int y){
+Color ColorImage::getColor(int x, int y){
     assert(pPixel); // die if image not initialized
     return pPixel[x + y*yRes];
 }
 
-void ColorImage::writePixel(int x, int y, Pixel p){
-    assert(pPixel); // die if image not initialized
-    pPixel[x + y*yRes] = p;
+void ColorImage::setColor(int x, int y, Color color){
+    Color orig = pPixel[x + y*yRes];
+    pPixel[x + y*yRes] = color;
 }
 
 void ColorImage::outputPPM(char *filename){
-    FILE *outFile = fopen(filename, "wb");
+    FILE *outFile = fopen(filename, "w");
 
     assert(outFile); // die if file can't be opened
 
@@ -46,4 +49,8 @@ void ColorImage::outputPPM(char *filename){
     fwrite(pPixel, 1, 3*xRes*yRes, outFile );
 
     fclose(outFile);
+}
+
+Color Color::blendColor(Color c) {
+    //return (this->Z > c.Z)? c : *this;
 }

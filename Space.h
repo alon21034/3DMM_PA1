@@ -5,8 +5,10 @@
 
 class Vec3{
 public:
+	// the plane function is ax+by+c+offset = 0
 	Vec3(float x,float y ,float z):X(x), Y(y), Z(z){};
 	float X, Y, Z;
+	float Offset;
 };
 
 class Space{
@@ -14,14 +16,17 @@ public:
 	Space(Triangle**, int);
 	~Space();
 
-	ColorImage getImage(Vec3, int, int);
+	ColorImage getImage(int, int);
 private:
 
 	int _size;
 	Triangle** _list;
 
-	void normalize();
-	void rasterization();
+	void normalize(int, int);
+	void projection();
+	void rotation();
+	void rasterization(ColorImage&);
+	void drawTriangle(ColorImage&, Triangle*);
 
 };
 #endif

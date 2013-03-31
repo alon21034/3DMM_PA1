@@ -6,18 +6,30 @@
 class Vertex {
 public:
 	Vertex(float, float, float);
+	Vertex(Vertex*);
 	~Vertex();
 
 	void setCoordinate(float, float, float);
-	void setPixel(Pixel*);
+	void setColor(float, float, float);
+	void scale(float, float, float, float);
+	void projection();
 
 	void print();
+	float getX() { return x; }
+	float getY() { return y; }
+	float getZ() { return z; }
+	
+	Color getColor(){ return *_p; }
 private:
 	float _x;
 	float _y;
 	float _z;
 
-	Pixel _p;
+	float x;
+	float y;
+	float z;
+
+	Color* _p;
 };
 
 #endif
