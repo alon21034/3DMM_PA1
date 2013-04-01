@@ -17,14 +17,15 @@ public:
     ~ColorImage();
     void init(int xSize, int ySize);
     void clear(Color background);
-    Color getColor(int x, int y);
-    void setColor(int x, int y, Color p);
+    Color getColor(int, int);
+    void setColor(int, int, Color, float);
     void outputPPM(char *filename);
 
     int getWidth() { return xRes; }
     int getHeight() { return yRes; }
 private:
     Color *pPixel;
+    float* zbuffer;
     int xRes, yRes;
 };
 

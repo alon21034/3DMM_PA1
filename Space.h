@@ -24,7 +24,7 @@ private:
 
 	void normalize(int, int);
 	void projection();
-	void rotation();
+	void rotation(float, float, float);
 	void rasterization(ColorImage&);
 	void drawTriangle(ColorImage&, Triangle*);
 

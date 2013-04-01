@@ -14,10 +14,10 @@ Triangle::Triangle(Vertex* v1, Vertex* v2, Vertex* v3) {
 void Triangle::drawVertex(ColorImage& image) {
 	//cout << "draw vertex" << endl;
 	Color color = _v1->getColor();
-	cout << "x: " << _v1->getX() << ", y: " << _v1->getY() << ", c: " << (int)color.R << " " << (int)color.G << " " << (int)color.B << endl;
-	image.setColor(_v1->getX(), _v1->getY(), _v1->getColor());
-	image.setColor(_v2->getX(), _v2->getY(), _v2->getColor());
-	image.setColor(_v3->getX(), _v3->getY(), _v3->getColor());
+	//cout << "x: " << _v1->getX() << ", y: " << _v1->getY() << ", c: " << (int)color.R << " " << (int)color.G << " " << (int)color.B << endl;
+	image.setColor(_v1->getX(), _v1->getY(), _v1->getColor(), _v1->getZ());
+	image.setColor(_v2->getX(), _v2->getY(), _v2->getColor(), _v2->getZ());
+	image.setColor(_v3->getX(), _v3->getY(), _v3->getColor(), _v3->getZ());
 }
 
 void Triangle::drawEdge(ColorImage& image) {
@@ -34,6 +34,9 @@ void Triangle::drawLine(ColorImage& image, Vertex* v1, Vertex* v2) {
 	float y2 = v2->getY();
 	float y1 = v1->getY();
 
+	float z1 = v1->getZ();
+	float z2 = v2->getZ();
+
 	Color color1 = v1->getColor();
 	Color color2 = v2->getColor();
 
@@ -41,7 +44,7 @@ void Triangle::drawLine(ColorImage& image, Vertex* v1, Vertex* v2) {
 	float yDiff = (y2 - y1);
 
 	if (xDiff == 0.0f && yDiff == 0.0f) {
-		image.setColor(x1, y1, color1);
+		image.setColor(x1, y1, color1, z1);
 		return;
 	}
 
@@ -60,8 +63,9 @@ void Triangle::drawLine(ColorImage& image, Vertex* v1, Vertex* v2) {
 		float slope = yDiff / xDiff;
 		for (float x = xmin; x <= xmax; x += 1.0f) {
 			float y = y1 + ((x - x1) * slope);
+			float z = z1 + fabs(((x - xmin)/xDiff));
 			Color color = Utils::blendColor(color1, color2, ((x - x1) / xDiff));
-			image.setColor(x, y, color);
+			image.setColor(x, y, color, z);
 		}
 	} else {
 		// vertical 
@@ -78,8 +82,9 @@ void Triangle::drawLine(ColorImage& image, Vertex* v1, Vertex* v2) {
 		float slope = xDiff / yDiff;
 		for (float y = ymin; y <= ymax; y += 1.0f) {
 			float x = x1 + ((y - y1) * slope);
+			float z = z1 + fabs(((y - ymin)/yDiff));
 			Color color = Utils::blendColor(color1, color2, ((y - y1) / yDiff));
-			image.setColor(x, y, color);
+			image.setColor(x, y, color, z);
 		}
 	}
 }
@@ -132,7 +137,7 @@ void Triangle::drawSpan(ColorImage& image, Span &span, int y) {
 
 	// draw each pixel in the span
 	for(float x = span.X1; x < span.X2; x+=1.0f) {
-		image.setColor(x, y, Utils::blendColor(span.color1, span.color2, factor));
+		image.setColor(x, y, Utils::blendColor(span.color1, span.color2, factor), Utils::inner(span.Z1, span.Z2, factor));
 		factor += factorStep;
 	}
 }
@@ -155,6 +160,11 @@ void Triangle::drawSpansBetweenEdges(ColorImage& image, Vertex* v1, Vertex* v2, 
 	Color color21 = v3->getColor();
 	Color color22 = v4->getColor();
 
+	float z1 = v1->getZ();
+	float z2 = v2->getZ();
+	float z3 = v3->getZ();
+	float z4 = v4->getZ();
+
 	// calculate factors to use for interpolation
 	// with the edges and the step values to increase
 	// them by after drawing each span
@@ -172,8 +182,10 @@ void Triangle::drawSpansBetweenEdges(ColorImage& image, Vertex* v1, Vertex* v2, 
 		// create and draw span
 		Span span(Utils::blendColor(color11, color12, factor1),
 		          v1->getX() + (xDiff1 * factor1),
+		          Utils::inner(z1, z2, factor1),
 		          Utils::blendColor(color21, color22, factor2),
-		          v3->getX() + (xDiff2 * factor2));
+		          v3->getX() + (xDiff2 * factor2),
+		          Utils::inner(z3, z4, factor2));
 		drawSpan(image, span, y);
 
 		// increase factors
@@ -188,10 +200,34 @@ void Triangle::scale(float rx, float ry, float ox, float oy) {
 	_v3->scale(rx, ry, ox, oy);
 }
 
+void Triangle::rotation(float a, float b, float c) {
+	_v1->rotation(a, b, c);
+	_v2->rotation(a, b, c);
+	_v3->rotation(a, b, c);
+}
+
 void Triangle::projection() {
 	_v1->projection();
 	_v2->projection();
 	_v3->projection();
+}
+
+bool Triangle::getOrientation() {
+	float vec1x, vec1y, vec1z;
+	float vec2x, vec2y, vec2z;
+
+	vec1x = _v2->getX() - _v1->getX();
+	vec1y = _v2->getY() - _v1->getY();
+	vec1z = _v2->getZ() - _v2->getZ();
+
+	vec2x = _v3->getX() - _v1->getX();
+	vec2y = _v3->getY() - _v1->getY();
+	vec2z = _v3->getZ() - _v1->getZ();
+
+	float vx, vy, vz;
+	vz = vec1x * vec2y - vec1y * vec2x;
+
+	return vz >= 0;
 }
 
 Vertex* Triangle::getVertex(int a) {

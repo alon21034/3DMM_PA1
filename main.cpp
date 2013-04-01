@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
 
 			for (int i = 0; i < vertexNum; ++i) {
 				float x, y, z;
-				fscanf(inputFile, "%f %f %f", &z, &y, &x);
+				fscanf(inputFile, "%f %f %f", &x, &y, &z);
 				vertexList[i] = new Vertex(x,y,z);
 			}
 		} else if (strcmp(str, COLOR_IDENTIFIER) == 0) {

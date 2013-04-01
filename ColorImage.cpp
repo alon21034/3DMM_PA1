@@ -8,6 +8,7 @@ using namespace std;
 
 ColorImage::ColorImage(){
     pPixel = 0;
+    zbuffer = 0;
 }
 
 ColorImage::~ColorImage(){
@@ -20,6 +21,10 @@ void ColorImage::init(int xSize, int ySize){
     xRes = xSize;
     yRes = ySize;
     pPixel = new Color[xSize*ySize];
+    zbuffer = new float[xSize*ySize];
+    for (int i = 0 ; i < xSize*ySize ; ++i) {
+        zbuffer[i] = 65535;
+    }
     clear(p);
 }
 
@@ -35,9 +40,18 @@ Color ColorImage::getColor(int x, int y){
     return pPixel[x + y*yRes];
 }
 
-void ColorImage::setColor(int x, int y, Color color){
-    Color orig = pPixel[x + y*yRes];
-    pPixel[x + y*yRes] = color;
+void ColorImage::setColor(int x, int y, Color color, float z){
+    if (z < zbuffer[x+y*yRes]) {
+        Color orig = pPixel[x + y*yRes];
+        pPixel[x + y*yRes] = color;
+        zbuffer[x + y*yRes] = z;
+    } else if (z == zbuffer[x+y*yRes]) {
+        Color orig = pPixel[x + y*yRes];
+        pPixel[x + y*yRes] = color;
+        zbuffer[x + y*yRes] = z;
+    } else {
+
+    }
 }
 
 void ColorImage::outputPPM(char *filename){

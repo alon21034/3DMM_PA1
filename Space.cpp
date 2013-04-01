@@ -69,8 +69,15 @@ void Space::normalize(int width, int height) {
 	cout << "offset = " << offX << "  " << offY << endl;
 }
 
-void Space::rotation() {
-
+void Space::rotation(float a, float b, float c) {
+	a *= 3.14159/180.0f;
+	b *= 3.14159/180.0f;
+	c *= 3.14159/180.0f;
+	cout << "start rotation: " << endl;
+	for (int i = 0 ; i < _size ; ++i) {
+		_list[i]->rotation(a, b, c);
+	}
+	cout << "space::rotation finished." << endl;
 }
 
 void Space::projection() {
@@ -91,6 +98,8 @@ void Space::rasterization(ColorImage& image) {
 }
 
 void Space::drawTriangle(ColorImage& image, Triangle* triangle) {
+	if (triangle->getOrientation() == false)
+		return ;
 	triangle->drawVertex(image);
 	triangle->drawEdge(image);
 	triangle->fillColor(image);
@@ -99,8 +108,8 @@ void Space::drawTriangle(ColorImage& image, Triangle* triangle) {
 ColorImage Space::getImage(int width, int height) {
 	ColorImage image;
 	image.init(width, height);
+	rotation(170, 170, -10);
 	normalize(width, height);
-	//rotation();
 	projection();
 	rasterization(image);
 

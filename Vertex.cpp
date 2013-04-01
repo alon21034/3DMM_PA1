@@ -1,4 +1,5 @@
 #include "Vertex.h"
+#include "Utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -30,14 +31,15 @@ void Vertex::scale(float rx, float ry, float ox, float oy) {
 }
 
 void Vertex::projection() {
-	//_p->Z = z;
-	// float temp = z;
-	// z = x;
-	// x = temp;
+
+}
+
+void Vertex::rotation(float a, float b, float c) {
+	Utils::rotation(a, b, c, x, y, z);
 }
 
 void Vertex::setColor(float r, float g, float b) {
-	cout << "Vertex::setColor " << r << " " << g << " " << b << endl;
+	//cout << "Vertex::setColor " << r << " " << g << " " << b << endl;
 	_p.R = r;
 	_p.G = g;
 	_p.B = b;

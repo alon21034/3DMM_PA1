@@ -7,18 +7,23 @@ class Span {
 public:
 	Color color1, color2;
 	float X1, X2;
+	float Z1, Z2;
 
-	Span(const Color &c1, float x1, const Color &c2, float x2) {
+	Span(const Color &c1, float x1, float z1, const Color &c2, float x2, float z2) {
 		if(x1 < x2) {
 			color1 = c1;
 			X1 = x1;
 			color2 = c2;
 			X2 = x2;
+			Z1 = z1;
+			Z2 = z2;
 		} else {
 			color1 = c2;
 			X1 = x2;
 			color2 = c1;
 			X2 = x1;
+			Z1 = z1;
+			Z2 = z2;
 		}
 	}
 
@@ -30,6 +35,10 @@ public:
 		Color t = color1;
 		color1 = color2;
 		color2 = t;
+
+		float tempz = Z1;
+		Z1 = Z2;
+		Z2 = tempz;
 	}
 };
 
@@ -44,7 +53,10 @@ public:
 	void fillColor(ColorImage&);
 
 	void scale(float, float, float, float);
+	void rotation(float, float, float);
 	void projection();
+
+	bool getOrientation();
 
 	float getX(int i) {
 		switch (i) {
