@@ -22,7 +22,7 @@ void Space::normalize(int width, int height) {
 	cout << "start normalization" << endl;
 
 	// (TODO) find max, min x/y can be calculate when loading file.
-	float maxX = 0, minX = INT_MAX, maxY = 0, minY = INT_MAX;
+	float maxX = 0, minX = INT_MAX, maxY = 0, minY = INT_MAX, maxZ = 0, minZ = INT_MAX;
 
 	for (int i = 0 ; i < _size ; ++i) {
 		float x1 = _list[i]->getX(1);
@@ -50,6 +50,18 @@ void Space::normalize(int width, int height) {
 		minY = (y1<minY)?y1:minY;
 		minY = (y2<minY)?y2:minY;
 		minY = (y3<minY)?y3:minY;
+
+		float z1 = _list[i]->getZ(1);
+		float z2 = _list[i]->getZ(2);
+		float z3 = _list[i]->getZ(3);
+
+		maxZ = (z1>maxY)?z1:maxZ;
+		maxZ = (z2>maxY)?z2:maxZ;
+		maxZ = (z3>maxY)?z3:maxZ;
+
+		minZ = (z1<minY)?z1:minZ;
+		minZ = (z2<minY)?z2:minZ;
+		minZ = (z3<minY)?z3:minZ;
 	}
 
 	float diffX = maxX - minX;
@@ -63,10 +75,16 @@ void Space::normalize(int width, int height) {
 		_list[i]->scale(rX, rY, offX, offY);
 	}
 
-	cout << "  " << minX << "  " << maxX << "  " << minY << "  " << maxY << endl;
-	cout << "rX = " << rX << endl;
-	cout << "rY = " << rY << endl;
-	cout << "offset = " << offX << "  " << offY << endl;
+
+	if (!hasColor) {
+		for (int i = 0 ; i < _size ; ++i) {
+			_list[i]->setColor(minZ, maxZ	);
+		}
+	}
+	// cout << "  " << minX << "  " << maxX << "  " << minY << "  " << maxY << endl;
+	// cout << "rX = " << rX << endl;
+	// cout << "rY = " << rY << endl;
+	// cout << "offset = " << offX << "  " << offY << endl;
 }
 
 void Space::rotation(float a, float b, float c) {
@@ -98,20 +116,26 @@ void Space::rasterization(ColorImage& image) {
 }
 
 void Space::drawTriangle(ColorImage& image, Triangle* triangle) {
-	if (triangle->getOrientation() == false)
-		return ;
+	// if (triangle->getOrientation()) {
+	// 	return ;
+	// }
 	triangle->drawVertex(image);
 	triangle->drawEdge(image);
-	triangle->fillColor(image);
+	if (hasColor)
+		triangle->fillColor(image);
 }
 
 ColorImage Space::getImage(int width, int height) {
 	ColorImage image;
 	image.init(width, height);
-	rotation(170, 170, -10);
+	rotation(0, 0, 0);
 	normalize(width, height);
 	projection();
 	rasterization(image);
 
 	return image;
+}
+
+void Space::setHasColor(bool b) {
+	hasColor = b;
 }

@@ -40,12 +40,12 @@ void Utils::rotation(float ax, float ay, float az, float& x, float& y, float& z)
 	float yy = mat[1][0] * x + mat[1][1] * y + mat[1][2] * z;
 	float zz = mat[2][0] * x + mat[2][1] * y + mat[2][2] * z;
 
-	for (int i = 0 ; i < 3 ; i++) {
-		for (int j = 0 ; j < 3 ; j++) {
-			cout << mat[i][j] << "  ";
-		}
-		cout << endl;
-	}
+	// for (int i = 0 ; i < 3 ; i++) {
+	// 	for (int j = 0 ; j < 3 ; j++) {
+	// 		cout << mat[i][j] << "  ";
+	// 	}
+	// 	cout << endl;
+	// }
 
 	x = xx;
 	y = yy;

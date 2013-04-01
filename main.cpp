@@ -16,27 +16,61 @@ using namespace std;
 #define VERTEX_MODE 1
 #define COLOR_MODE 2
 
+char* startRender(FILE* inputFile, char*);
+
 int main(int argc, char** argv) {
-	char* inputFilePath;
-	char* outputFilePath;
-	if (argc < 3) {
-		inputFilePath = new char[20];
-		inputFilePath = "Models/cube.txt";
 
-		outputFilePath = new char[20];
-		outputFilePath = "result_image,ppm";
-	} else {
-		inputFilePath = argv[1];
-		outputFilePath = argv[2];
+	if (argc == 1) {
+		char* files[12] = {
+			"Models/Armadillo3K.txt",
+			"Models/bunnyC.txt",
+			"Models/cube.txt",
+			"Models/dolphin.txt",
+			"Models/dragonC.txt",
+			"Models/frog2KC.txt",
+			"Models/happy5KC.txt",
+			"Models/horse1KC.txt",
+			"Models/sphere5.txt",
+			"Models/teapot.txt",
+			"Models/tiger.txt",
+			"Models/toruses.txt"
+		};
+
+		char* outFileName[12] = {
+			"result-1.ppm",
+			"result-2.ppm",
+			"result-3.ppm",
+			"result-4.ppm",
+			"result-5.ppm",
+			"result-6.ppm",
+			"result-7.ppm",
+			"result-8.ppm",
+			"result-9.ppm",
+			"result-10.ppm",
+			"result-11.ppm",
+			"result-12.ppm"
+		};
+
+		for (int i = 0 ; i < 12 ; ++i) {
+			FILE* inputFile = fopen(files[i], "r");
+			startRender(inputFile, outFileName[i]);
+			fclose(inputFile);
+		}
+	} else if(argc == 3) {
+		FILE* inputFile = fopen(argv[1], "r");
+		startRender(inputFile, argv[2]);
+		fclose(inputFile);
 	}
-	FILE* inputFile = fopen(inputFilePath, "r");
+}
 
+char* startRender(FILE* inputFile, char* name) {
 	char str[100];
 	int mode = VERTEX_MODE;
 	Vertex** vertexList = NULL;
 	Triangle** triangleList = NULL;
 	int vertexNum;
 	int triangleNum;
+	bool hasColor = false;
 
 	// read identifier
 	while(fscanf(inputFile, "%s", str)) {
@@ -73,6 +107,7 @@ int main(int argc, char** argv) {
 				//cout << i << "  " << r << " " << g << " " << b << endl;
 				vertexList[i]->setColor(r*255,g*255,b*255);
 			}
+			hasColor = true;
 		} else if (strcmp(str, TRIANGLE_IDENTIFIER) == 0) {
 			// read triangles
 			if (vertexList == NULL) {
@@ -99,7 +134,7 @@ int main(int argc, char** argv) {
 	printf("finished reading input file\n");
 
 	Space* space = new Space(triangleList, triangleNum);
+	space->setHasColor(hasColor);
 	ColorImage image = space->getImage(500, 500);
-	image.outputPPM("result.ppm");
-    /**/
+	image.outputPPM(name);
 }

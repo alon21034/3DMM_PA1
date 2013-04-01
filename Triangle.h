@@ -2,6 +2,7 @@
 #define __TRIANGLE__H
 
 #include "Vertex.h"
+#include "Utils.h"
 
 class Span {
 public:
@@ -76,8 +77,26 @@ public:
 		}		
 	}
 
-private:
+	float getZ(int i) {
+		switch (i) {
+			case 1: return _v1->getZ();
+			case 2: return _v2->getZ();
+			case 3: return _v3->getZ();
+			default: return 0;
+		}		
+	}
 
+	void setColor(float a, float b) {
+		float c1 = Utils::inner(100, 255, (_v1->getZ() - a)/(b-a));
+		_v1->setColor(c1, c1, c1);
+
+		float c2 = Utils::inner(100, 255, (_v2->getZ() - a)/ (b-a));
+		_v2->setColor(c2, c2, c2);
+
+		float c3 = Utils::inner(100, 255, (_v3->getZ() - a)/ (b-a));
+		_v3->setColor(c3, c3, c3);		
+	}
+private:
 	void drawLine(ColorImage&, Vertex*, Vertex*);
 	void drawSpan(ColorImage&, Span&, int);
 	void drawSpansBetweenEdges(ColorImage&, Vertex*, Vertex*, Vertex*, Vertex*);

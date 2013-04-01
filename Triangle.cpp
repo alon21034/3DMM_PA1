@@ -13,11 +13,10 @@ Triangle::Triangle(Vertex* v1, Vertex* v2, Vertex* v3) {
 
 void Triangle::drawVertex(ColorImage& image) {
 	//cout << "draw vertex" << endl;
-	Color color = _v1->getColor();
-	//cout << "x: " << _v1->getX() << ", y: " << _v1->getY() << ", c: " << (int)color.R << " " << (int)color.G << " " << (int)color.B << endl;
 	image.setColor(_v1->getX(), _v1->getY(), _v1->getColor(), _v1->getZ());
 	image.setColor(_v2->getX(), _v2->getY(), _v2->getColor(), _v2->getZ());
 	image.setColor(_v3->getX(), _v3->getY(), _v3->getColor(), _v3->getZ());
+	//cout << "x: " << _v1->getX() << ", y: " << _v1->getY() << ", c: " << (int)color.R << " " << (int)color.G << " " << (int)color.B << endl;
 }
 
 void Triangle::drawEdge(ColorImage& image) {
@@ -147,7 +146,7 @@ void Triangle::drawSpansBetweenEdges(ColorImage& image, Vertex* v1, Vertex* v2, 
 	float yDiff1 = v2->getY() - v1->getY();
 	float yDiff2 = v4->getY() - v3->getY();
 
-	if((int)yDiff1 == 0 || (int)yDiff2 == 0)
+	if((int)v2->getY() == (int)v1->getY() || (int)v4->getY() == (int)v3->getY())
 		return;
 
 	// calculate differences between the x coordinates

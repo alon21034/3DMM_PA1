@@ -16,11 +16,13 @@ public:
 	Space(Triangle**, int);
 	~Space();
 
+	void setHasColor(bool);
 	ColorImage getImage(int, int);
 private:
 
 	int _size;
 	Triangle** _list;
+	bool hasColor;
 
 	void normalize(int, int);
 	void projection();
