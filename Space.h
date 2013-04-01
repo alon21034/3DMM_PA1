@@ -17,16 +17,18 @@ public:
 	~Space();
 
 	void setHasColor(bool);
-	ColorImage getImage(int, int);
+
+	ColorImage getImage(int);
 private:
 
 	int _size;
 	Triangle** _list;
 	bool hasColor;
 
+	void translation(float, float, float);
 	void normalize(int, int);
 	void projection();
-	void rotation(float, float, float);
+	void rotation(float, float, float, int);
 	void rasterization(ColorImage&);
 	void drawTriangle(ColorImage&, Triangle*);
 

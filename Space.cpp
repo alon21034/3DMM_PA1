@@ -55,47 +55,64 @@ void Space::normalize(int width, int height) {
 		float z2 = _list[i]->getZ(2);
 		float z3 = _list[i]->getZ(3);
 
-		maxZ = (z1>maxY)?z1:maxZ;
-		maxZ = (z2>maxY)?z2:maxZ;
-		maxZ = (z3>maxY)?z3:maxZ;
+		maxZ = (z1>maxZ)?z1:maxZ;
+		maxZ = (z2>maxZ)?z2:maxZ;
+		maxZ = (z3>maxZ)?z3:maxZ;
 
-		minZ = (z1<minY)?z1:minZ;
-		minZ = (z2<minY)?z2:minZ;
-		minZ = (z3<minY)?z3:minZ;
+		minZ = (z1<minZ)?z1:minZ;
+		minZ = (z2<minZ)?z2:minZ;
+		minZ = (z3<minZ)?z3:minZ;
 	}
 
 	float diffX = maxX - minX;
 	float diffY = maxY - minY;
+	float diffZ = maxZ - minZ;
 	float rX = (float)(width)*0.8/diffX;
-	float rY = (float)(height)*0.8/diffY;
-	float offX = - minX;
-	float offY = - minY;
+	float rY = (float)(width)*0.8/diffY;
+	float rZ = (float)(width)*0.8/diffZ;
+	float offX = (-minX);
+	float offY = (-minY);
+	float offZ = (-minZ);
+
+	float r = (rX < rY)? rX : rY;
+	r = (r < rZ)? r : rZ;
 
 	for (int i = 0 ; i < _size ; ++i) {
-		_list[i]->scale(rX, rY, offX, offY);
+		_list[i]->scale(r, r, r, offX, offY, offZ);
 	}
 
 
 	if (!hasColor) {
 		for (int i = 0 ; i < _size ; ++i) {
-			_list[i]->setColor(minZ, maxZ	);
+			_list[i]->setColor(minZ, maxZ);
 		}
 	}
-	// cout << "  " << minX << "  " << maxX << "  " << minY << "  " << maxY << endl;
-	// cout << "rX = " << rX << endl;
-	// cout << "rY = " << rY << endl;
-	// cout << "offset = " << offX << "  " << offY << endl;
+
+	cout << "r = " << r << endl;
+	 cout << "  " << minX << "  " << maxX << "  " << minY << "  " << maxY << "  " << minZ << "  " << maxZ << endl;
+	 cout << "rX = " << rX << endl;
+	 cout << "rY = " << rY << endl;
+	 cout << "rZ = " << rZ << endl;
+	 cout << "offset = " << offX << "  " << offY << "  " << offX << endl;
 }
 
-void Space::rotation(float a, float b, float c) {
+void Space::rotation(float a, float b, float c, int w) {
 	a *= 3.14159/180.0f;
 	b *= 3.14159/180.0f;
 	c *= 3.14159/180.0f;
 	cout << "start rotation: " << endl;
 	for (int i = 0 ; i < _size ; ++i) {
+		_list[i]->translation(-w/2, -w/2, -w/2);
 		_list[i]->rotation(a, b, c);
+		_list[i]->translation(w/2, w/2, w/2);
 	}
 	cout << "space::rotation finished." << endl;
+}
+
+void Space::translation(float x, float y, float z) {
+	for (int i = 0 ; i < _size ; ++i) {
+		_list[i]->translation(x,y,z);
+	}
 }
 
 void Space::projection() {
@@ -109,7 +126,7 @@ void Space::projection() {
 void Space::rasterization(ColorImage& image) {
 	cout << "start rasterization: " << endl;
 	for (int i = 0 ; i < _size ; ++i) {
-		//cout << "drawTriangle: " << i << endl;
+		cout << "drawTriangle: " << i << endl;
 		drawTriangle(image, _list[i]);
 	}
 	cout << "space::rasterization finished." << endl;
@@ -125,11 +142,13 @@ void Space::drawTriangle(ColorImage& image, Triangle* triangle) {
 		triangle->fillColor(image);
 }
 
-ColorImage Space::getImage(int width, int height) {
+ColorImage Space::getImage(int width) {
 	ColorImage image;
-	image.init(width, height);
-	rotation(0, 0, 0);
-	normalize(width, height);
+	image.init(width, width);
+	normalize(width, width);
+	rotation(90, 180, 0, width);
+	// normalize(width,width);
+	//translation(-50, -50, 0);
 	projection();
 	rasterization(image);
 

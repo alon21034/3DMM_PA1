@@ -16,7 +16,8 @@ void Triangle::drawVertex(ColorImage& image) {
 	image.setColor(_v1->getX(), _v1->getY(), _v1->getColor(), _v1->getZ());
 	image.setColor(_v2->getX(), _v2->getY(), _v2->getColor(), _v2->getZ());
 	image.setColor(_v3->getX(), _v3->getY(), _v3->getColor(), _v3->getZ());
-	//cout << "x: " << _v1->getX() << ", y: " << _v1->getY() << ", c: " << (int)color.R << " " << (int)color.G << " " << (int)color.B << endl;
+	Color color = _v1->getColor();
+	cout << "x: " << _v1->getX() << ", y: " << _v1->getY() << ", c: " << (int)color.R << " " << (int)color.G << " " << (int)color.B << endl;
 }
 
 void Triangle::drawEdge(ColorImage& image) {
@@ -193,10 +194,16 @@ void Triangle::drawSpansBetweenEdges(ColorImage& image, Vertex* v1, Vertex* v2, 
 	}
 }
 
-void Triangle::scale(float rx, float ry, float ox, float oy) {
-	_v1->scale(rx, ry, ox, oy);
-	_v2->scale(rx, ry, ox, oy);
-	_v3->scale(rx, ry, ox, oy);
+void Triangle::scale(float rx, float ry, float rz, float ox, float oy, float oz) {
+	_v1->scale(rx, ry, rz, ox, oy, oz);
+	_v2->scale(rx, ry, rz, ox, oy, oz);
+	_v3->scale(rx, ry, rz, ox, oy, oz);
+}
+
+void Triangle::translation(float ox, float oy, float oz) {
+	_v1->translation(ox, oy, oz);
+	_v2->translation(ox, oy, oz);
+	_v3->translation(ox, oy, oz);
 }
 
 void Triangle::rotation(float a, float b, float c) {

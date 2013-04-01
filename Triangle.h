@@ -53,9 +53,10 @@ public:
 	void drawEdge(ColorImage&);
 	void fillColor(ColorImage&);
 
-	void scale(float, float, float, float);
+	void scale(float, float, float, float, float, float);
 	void rotation(float, float, float);
 	void projection();
+	void translation(float, float, float);
 
 	bool getOrientation();
 

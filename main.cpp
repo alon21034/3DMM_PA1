@@ -135,6 +135,6 @@ char* startRender(FILE* inputFile, char* name) {
 
 	Space* space = new Space(triangleList, triangleNum);
 	space->setHasColor(hasColor);
-	ColorImage image = space->getImage(500, 500);
+	ColorImage image = space->getImage(500);
 	image.outputPPM(name);
 }

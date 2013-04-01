@@ -23,10 +23,11 @@ Vertex::~Vertex() {
 	
 }
 
-void Vertex::scale(float rx, float ry, float ox, float oy) {
+void Vertex::scale(float rx, float ry, float rz, float ox, float oy, float oz) {
 	//cout << x << "  " << y << " -> ";
-	x = (x+ox)*rx + 1;
-	y = (y+oy)*ry + 1;
+	x = (x+ox)*rx;
+	y = (y+oy)*ry;
+	z = (z+oz)*rz;
 	//cout << x << "  " << y << endl;
 }
 
@@ -43,6 +44,12 @@ void Vertex::setColor(float r, float g, float b) {
 	_p.R = r;
 	_p.G = g;
 	_p.B = b;
+}
+
+void Vertex::translation(float ox, float oy, float oz) {
+	x += ox;
+	y += oy;
+	z += oz;
 }
 
 void Vertex::print() {

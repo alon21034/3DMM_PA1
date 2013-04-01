@@ -11,9 +11,10 @@ public:
 
 	void setCoordinate(float, float, float);
 	void setColor(float, float, float);
-	void scale(float, float, float, float);
+	void scale(float, float, float, float, float, float);
 	void projection();
 	void rotation(float, float, float);
+	void translation(float, float, float);
 
 	void print();
 	float getX() { return x; }

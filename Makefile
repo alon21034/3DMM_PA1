@@ -20,4 +20,4 @@ Utils.o: Utils.cpp Utils.h
 	g++ -c Utils.cpp
 
 clean:
-	rm *.o pa1
+	rm *.o pa1 *.ppm

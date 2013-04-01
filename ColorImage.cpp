@@ -41,6 +41,8 @@ Color ColorImage::getColor(int x, int y){
 }
 
 void ColorImage::setColor(int x, int y, Color color, float z){
+    if (x < 0 || x > xRes || y < 0 || y > yRes)
+        return;
     if (z < zbuffer[x+y*yRes]) {
         Color orig = pPixel[x + y*yRes];
         pPixel[x + y*yRes] = color;
