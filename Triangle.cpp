@@ -46,7 +46,7 @@ void Triangle::drawLine(ColorImage& image, Vertex* v1, Vertex* v2) {
 	}
 
 	if (fabs(xDiff) > fabs(yDiff)) {
-		// vertical
+		// horizontal
 		float xmin, xmax;
 		if (x1 < x2) {
 			xmin = x1;
@@ -81,6 +81,104 @@ void Triangle::drawLine(ColorImage& image, Vertex* v1, Vertex* v2) {
 			Color color = Utils::blendColor(color1, color2, ((y - y1) / yDiff));
 			image.setColor(x, y, color);
 		}
+	}
+}
+
+void Triangle::fillColor(ColorImage& image) {
+
+	float y1 = _v1->getY();
+	float y2 = _v2->getY();
+	float y3 = _v3->getY();
+
+	if (y1 < y2 && y1 < y3) {
+		if (y2 < y3) {
+			drawSpansBetweenEdges(image, _v1, _v3, _v1, _v2);
+			drawSpansBetweenEdges(image, _v1, _v3, _v2, _v3);
+		} else {
+			drawSpansBetweenEdges(image, _v1, _v2, _v1, _v3);
+			drawSpansBetweenEdges(image, _v1, _v2, _v3, _v2);
+		}
+	} else if (y2 < y3 && y2 < y1) {
+		if (y1 < y3) {
+			drawSpansBetweenEdges(image, _v2, _v3, _v2, _v1);
+			drawSpansBetweenEdges(image, _v2, _v3, _v1, _v3);
+		} else {
+			drawSpansBetweenEdges(image, _v2, _v1, _v2, _v3);
+			drawSpansBetweenEdges(image, _v2, _v1, _v3, _v1);
+		}
+	} else {
+		if (y1 < y2) {
+			drawSpansBetweenEdges(image, _v3, _v2, _v3, _v1);
+			drawSpansBetweenEdges(image, _v3, _v2, _v1, _v2);
+		} else {
+			drawSpansBetweenEdges(image, _v3, _v1, _v3, _v2);
+			drawSpansBetweenEdges(image, _v3, _v1, _v2, _v1);
+		}
+	}
+
+}
+
+void Triangle::drawSpan(ColorImage& image, Span &span, int y) {
+	float xdiff = span.X2 - span.X1;
+	if((int)xdiff == 0)
+		return;
+
+	if (span.X2 < span.X1) {
+		span.switchValue();
+	}
+
+	float factor = 0.0f;
+	float factorStep = 1.0f / xdiff;
+
+	// draw each pixel in the span
+	for(float x = span.X1; x < span.X2; x+=1.0f) {
+		image.setColor(x, y, Utils::blendColor(span.color1, span.color2, factor));
+		factor += factorStep;
+	}
+}
+
+void Triangle::drawSpansBetweenEdges(ColorImage& image, Vertex* v1, Vertex* v2, Vertex* v3, Vertex* v4) {
+
+	float yDiff1 = v2->getY() - v1->getY();
+	float yDiff2 = v4->getY() - v3->getY();
+
+	if((int)yDiff1 == 0 || (int)yDiff2 == 0)
+		return;
+
+	// calculate differences between the x coordinates
+	// and colors of the points of the edges
+	float xDiff1 = v2->getX() - v1->getX();
+	float xDiff2 = v4->getX() - v3->getX();
+
+	Color color11 = v1->getColor();
+	Color color12 = v2->getColor();
+	Color color21 = v3->getColor();
+	Color color22 = v4->getColor();
+
+	// calculate factors to use for interpolation
+	// with the edges and the step values to increase
+	// them by after drawing each span
+	// float factor1 = (v3->getY() - v1->getY()) / yDiff1;
+	// float factorStep1 = 1.0f / yDiff1;
+	// float factor2 = 0.0f;
+	// float factorStep2 = 1.0f / yDiff2;
+
+	// loop through the lines between the edges and draw spans
+	for(float y = v3->getY(); y <= v4->getY(); y+=1.0f) {
+
+		float factor1 = (y - v1->getY()) / yDiff1;
+		float factor2 = (y - v3->getY()) / yDiff2;
+
+		// create and draw span
+		Span span(Utils::blendColor(color11, color12, factor1),
+		          v1->getX() + (xDiff1 * factor1),
+		          Utils::blendColor(color21, color22, factor2),
+		          v3->getX() + (xDiff2 * factor2));
+		drawSpan(image, span, y);
+
+		// increase factors
+		// factor1 += factorStep1;
+		// factor2 += factorStep2;
 	}
 }
 

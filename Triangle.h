@@ -3,6 +3,36 @@
 
 #include "Vertex.h"
 
+class Span {
+public:
+	Color color1, color2;
+	float X1, X2;
+
+	Span(const Color &c1, float x1, const Color &c2, float x2) {
+		if(x1 < x2) {
+			color1 = c1;
+			X1 = x1;
+			color2 = c2;
+			X2 = x2;
+		} else {
+			color1 = c2;
+			X1 = x2;
+			color2 = c1;
+			X2 = x1;
+		}
+	}
+
+	void switchValue() {
+		float temp = X1;
+		X1 = X2;
+		X2 = temp;
+
+		Color t = color1;
+		color1 = color2;
+		color2 = t;
+	}
+};
+
 class Triangle {
 public:
 	Triangle(Vertex*, Vertex*, Vertex*);
@@ -11,7 +41,7 @@ public:
 
 	void drawVertex(ColorImage&);
 	void drawEdge(ColorImage&);
-	void fill(ColorImage&);
+	void fillColor(ColorImage&);
 
 	void scale(float, float, float, float);
 	void projection();
@@ -37,6 +67,8 @@ public:
 private:
 
 	void drawLine(ColorImage&, Vertex*, Vertex*);
+	void drawSpan(ColorImage&, Span&, int);
+	void drawSpansBetweenEdges(ColorImage&, Vertex*, Vertex*, Vertex*, Vertex*);
 
 	Vertex* _v1;
 	Vertex* _v2;
