@@ -87,16 +87,7 @@ public:
 		}		
 	}
 
-	void setColor(float a, float b) {
-		float c1 = Utils::inner(100, 255, (_v1->getZ() - a)/(b-a));
-		_v1->setColor(c1, c1, c1);
-
-		float c2 = Utils::inner(100, 255, (_v2->getZ() - a)/ (b-a));
-		_v2->setColor(c2, c2, c2);
-
-		float c3 = Utils::inner(100, 255, (_v3->getZ() - a)/ (b-a));
-		_v3->setColor(c3, c3, c3);		
-	}
+	void setColor(float a, float b);	
 private:
 	void drawLine(ColorImage&, Vertex*, Vertex*);
 	void drawSpan(ColorImage&, Span&, int);

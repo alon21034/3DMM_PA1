@@ -17,9 +17,9 @@ Space::~Space() {
 	delete _list;
 }
 
-void Space::normalize(int width, int height) {
+void Space::normalize(int width, int height, int xx, int yy) {
 
-	cout << "start normalization" << endl;
+	//cout << "start normalization" << endl;
 
 	// (TODO) find max, min x/y can be calculate when loading file.
 	float maxX = 0, minX = INT_MAX, maxY = 0, minY = INT_MAX, maxZ = 0, minZ = INT_MAX;
@@ -78,35 +78,37 @@ void Space::normalize(int width, int height) {
 	r = (r < rZ)? r : rZ;
 
 	for (int i = 0 ; i < _size ; ++i) {
-		_list[i]->scale(r, r, r, offX, offY, offZ);
+		//_list[i]->translation(offX, offY, offZ);
+		_list[i]->scale(r, r, r, 0, 0 ,0);
+		_list[i]->translation(xx, yy, 0);
 	}
 
 
 	if (!hasColor) {
 		for (int i = 0 ; i < _size ; ++i) {
-			_list[i]->setColor(minZ, maxZ);
+			_list[i]->setColor(minZ * r, maxZ * r);
 		}
 	}
 
-	cout << "r = " << r << endl;
-	 cout << "  " << minX << "  " << maxX << "  " << minY << "  " << maxY << "  " << minZ << "  " << maxZ << endl;
-	 cout << "rX = " << rX << endl;
-	 cout << "rY = " << rY << endl;
-	 cout << "rZ = " << rZ << endl;
-	 cout << "offset = " << offX << "  " << offY << "  " << offX << endl;
+	// cout << "r = " << r << endl;
+	// cout << "  " << minX << "  " << maxX << "  " << minY << "  " << maxY << "  " << minZ << "  " << maxZ << endl;
+	// cout << "rX = " << rX << endl;
+	// cout << "rY = " << rY << endl;
+	// cout << "rZ = " << rZ << endl;
+	// cout << "offset = " << offX << "  " << offY << "  " << offX << endl;
 }
 
 void Space::rotation(float a, float b, float c, int w) {
 	a *= 3.14159/180.0f;
 	b *= 3.14159/180.0f;
 	c *= 3.14159/180.0f;
-	cout << "start rotation: " << endl;
+	//cout << "start rotation: " << endl;
 	for (int i = 0 ; i < _size ; ++i) {
-		_list[i]->translation(-w/2, -w/2, -w/2);
+		//_list[i]->translation(-w/2, -w/2, -w/2);
 		_list[i]->rotation(a, b, c);
-		_list[i]->translation(w/2, w/2, w/2);
+		//_list[i]->translation(w/2, w/2, w/2);
 	}
-	cout << "space::rotation finished." << endl;
+	//cout << "space::rotation finished." << endl;
 }
 
 void Space::translation(float x, float y, float z) {
@@ -116,20 +118,20 @@ void Space::translation(float x, float y, float z) {
 }
 
 void Space::projection() {
-	cout << "start projection: " << endl;
+	//cout << "start projection: " << endl;
 	for (int i = 0 ; i < _size ; ++i) {
 		_list[i]->projection();
 	}
-	cout << "space::projection finished." << endl;
+	//cout << "space::projection finished." << endl;
 }
 
 void Space::rasterization(ColorImage& image) {
-	cout << "start rasterization: " << endl;
+	//cout << "start rasterization: " << endl;
 	for (int i = 0 ; i < _size ; ++i) {
-		cout << "drawTriangle: " << i << endl;
+		//cout << "drawTriangle: " << i << endl;
 		drawTriangle(image, _list[i]);
 	}
-	cout << "space::rasterization finished." << endl;
+	//cout << "space::rasterization finished." << endl;
 }
 
 void Space::drawTriangle(ColorImage& image, Triangle* triangle) {
@@ -142,13 +144,40 @@ void Space::drawTriangle(ColorImage& image, Triangle* triangle) {
 		triangle->fillColor(image);
 }
 
-ColorImage Space::getImage(int width) {
+ColorImage Space::getImage(int width, int index) {
 	ColorImage image;
 	image.init(width, width);
-	normalize(width, width);
-	rotation(90, 180, 0, width);
-	// normalize(width,width);
-	//translation(-50, -50, 0);
+	switch (index) {
+		case 0: rotation(150, 180, 0, width); break;
+		case 1: rotation(10, 170, 0, width); break;
+		case 2: rotation(30, 120, 20, width); break;
+		case 3: rotation(40, 150, 30, width); break;
+		case 4: rotation(0, 180, 0, width); break;
+		case 5: rotation(0, 120, 0, width); break;
+		case 6: rotation(0, 180, 0, width); break;
+		case 7: rotation(90, 180, 90, width); break;
+		case 8: rotation(10, 10, 10, width); break;
+		case 9: rotation(0, -90, 0, width); break;
+		case 10: rotation(70, 180, 0, width); break;
+		case 11: rotation(30, 30, 0, width); break;
+		default: rotation(0,0,0,width); break;
+	}
+
+	switch (index) {
+		case 0: normalize(width, width, 0.5*width, 0.6*width); break;
+		case 1: normalize(width, width, 0.5*width, 0.5*width); break;
+		case 2: normalize(width, width, 0.5*width, 0.5*width); break;
+		case 3: normalize(width, width, 0.45*width, 0.45*width); break;
+		case 4: normalize(width, width, 0.5*width, width); break;
+		case 5: normalize(width, width, 0.5*width, 0.45*width); break;
+		case 6: normalize(width, width, 0.5*width, width); break;
+		case 7: normalize(width, width, 0.5*width, 0.5*width); break;
+		case 8: normalize(width, width, 0.5*width, 0.5*width); break;
+		case 9: normalize(width, width, 1.1*width, 0.75*width); break;
+		case 10: normalize(width, width, 0.5*width, 0.5*width); break;
+		case 11: normalize(width, width, 0.5*width, 0.5*width); break;
+		default: normalize(width, width,0.5*width, 0.5*width); break;
+	}
 	projection();
 	rasterization(image);
 

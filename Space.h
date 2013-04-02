@@ -18,7 +18,7 @@ public:
 
 	void setHasColor(bool);
 
-	ColorImage getImage(int);
+	ColorImage getImage(int, int);
 private:
 
 	int _size;
@@ -26,7 +26,7 @@ private:
 	bool hasColor;
 
 	void translation(float, float, float);
-	void normalize(int, int);
+	void normalize(int, int, int, int);
 	void projection();
 	void rotation(float, float, float, int);
 	void rasterization(ColorImage&);

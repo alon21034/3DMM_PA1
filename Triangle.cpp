@@ -17,7 +17,7 @@ void Triangle::drawVertex(ColorImage& image) {
 	image.setColor(_v2->getX(), _v2->getY(), _v2->getColor(), _v2->getZ());
 	image.setColor(_v3->getX(), _v3->getY(), _v3->getColor(), _v3->getZ());
 	Color color = _v1->getColor();
-	cout << "x: " << _v1->getX() << ", y: " << _v1->getY() << ", c: " << (int)color.R << " " << (int)color.G << " " << (int)color.B << endl;
+	//cout << "x: " << _v1->getX() << ", y: " << _v1->getY() << ", c: " << (int)color.R << " " << (int)color.G << " " << (int)color.B << endl;
 }
 
 void Triangle::drawEdge(ColorImage& image) {
@@ -234,6 +234,17 @@ bool Triangle::getOrientation() {
 	vz = vec1x * vec2y - vec1y * vec2x;
 
 	return vz >= 0;
+}
+
+void Triangle::setColor(float a, float b) {
+	float c1 = Utils::inner(250, 50, (_v1->getZ() - a) / (b-a));
+	_v1->setColor(c1, c1, c1);
+
+	float c2 = Utils::inner(250, 50, (_v2->getZ() - a) / (b-a));
+	_v2->setColor(c2, c2, c2);
+
+	float c3 = Utils::inner(250, 50, (_v3->getZ() - a) / (b-a));
+	_v3->setColor(c3, c3, c3);		
 }
 
 Vertex* Triangle::getVertex(int a) {

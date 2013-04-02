@@ -25,9 +25,9 @@ Vertex::~Vertex() {
 
 void Vertex::scale(float rx, float ry, float rz, float ox, float oy, float oz) {
 	//cout << x << "  " << y << " -> ";
-	x = (x+ox)*rx;
-	y = (y+oy)*ry;
-	z = (z+oz)*rz;
+	x = (x)*rx;
+	y = (y)*ry;
+	z = (z)*rz;
 	//cout << x << "  " << y << endl;
 }
 
